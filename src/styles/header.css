@@ -1,0 +1,141 @@
+/* General Styles */
+.header-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 0fr;
+  align-items: center;
+  padding: 1.5rem;
+  background-color: #fff; /* White background */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+body {
+  margin: 0; /* Remove default body margins */
+}
+
+/* Logo */
+.logo {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #333; /* Dark gray for logo text */
+}
+
+.logo-link{
+  color: #333;
+  text-decoration: none;
+  cursor: default;
+}
+
+.logo-link:hover{
+  text-decoration: underline;
+  text-decoration-color:#ffa500 ;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 7px;
+}
+
+/* Navigation */
+.navigation ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navigation li {
+  font-family: 'Cinzel Decorative', serif;
+  font-weight: 600;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  margin-right: 2rem;
+  position: relative;
+}
+
+.navigation a, 
+.navigation button {
+  font: inherit;
+  text-decoration: none;
+  color: #555; /* Medium gray for links */
+  font-size: 1.2rem;
+  transition: color 0.2s ease; /* Smooth color transition on hover */
+  background-color: transparent;
+}
+
+.navigation a:hover,
+.navigation button:hover {
+  background-color: transparent;
+color: #ffa500
+}
+
+/* Dropdown */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #fff;
+  min-width: 10rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  border-radius: 0.3rem; /* Rounded corners */
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown-content li {
+  padding: 0.8rem 1rem;
+}
+
+.dropdown-content a {
+  display: block; /* Make links full width */
+}
+
+/* Login Container */
+.login-container {
+  display: flex;
+  align-items: center;
+}
+
+.search,
+.login-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.5rem;
+  color: #555;
+  margin-left: 1rem;
+  transition: color 0.2s ease;
+}
+
+.search{
+margin: 0;
+}
+
+.search:hover,
+.login-button:hover {
+  color: #ffa500;
+  background-color: transparent;
+}
+
+/* Media Query for Smaller Screens (e.g., tablets and phones) */
+@media (max-width: 768px) {
+  .header-container {
+    flex-direction: column; /* Stack items vertically */
+    align-items: flex-start; /* Align to the start (left) */
+  }
+  .logo {
+    margin-bottom: 1rem; /* Add space below logo */
+  }
+  .navigation ul {
+    flex-direction: column; /* Stack navigation links vertically */
+  }
+  .navigation li {
+    margin: 0.5rem 0; /* Adjust margin for vertical stacking */
+    width: 100%; /* Make links full width */
+  }
+  .login-container {
+    margin-top: 1rem; /* Add space above login container */
+    width: 100%; /* Make login container full width */
+    justify-content: center; /* Center login buttons */
+  }
+}

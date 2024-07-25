@@ -1,0 +1,98 @@
+/* Product Card Container */
+.product-card-container {
+  width: 100%;
+  max-width: 300px;
+  margin: 1.5em auto;
+  perspective: 1000px;
+}
+
+/* Product Card Link */
+.product-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+/* Product Card */
+.product-card {
+  background-color: #f9f9f9; /* Soft, neutral background */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  position: relative;
+}
+
+del {
+  margin-right: 1rem;
+}
+
+span {
+  color: green;
+}
+
+/* Hover Effect */
+.product-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(125, 125, 125, 0.5); /* Semi-transparent overlay */
+  transform: scale(1.1); /* Slightly magnified on hover */
+  z-index: -1;
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-card:hover::before {
+  transform: scale(1); /* Return to normal size on hover */
+}
+
+/* Product Image */
+.product-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-card:hover img {
+  transform: scale(1.05); /* Slightly magnified on hover */
+}
+
+/* Product Info */
+.product-info {
+  padding: 15px;
+}
+
+.product-info h3 {
+  margin-bottom: 5px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333; /* Dark text for readability */
+}
+
+.price {
+  color: #4CAF50; /* Calming green for price */
+  font-weight: bold;
+}
+
+/* Add to Cart Button */
+.btn-primary {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #ffa500; /* Subtle blue for call-to-action */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color:  rgba(250, 179, 85, 0.8); /* Darker blue on hover */
+}

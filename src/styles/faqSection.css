@@ -1,0 +1,80 @@
+/* General styles */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f9;
+  margin: 0;
+  padding: 20px;
+}
+
+.faq-section {
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0px 30px #ffa500;
+  border: #ffa500 solid 2px;
+  margin-bottom: 1%;
+}
+
+.faq-section h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.faq-question {
+  border-radius: 8px;
+  border-bottom: 1px solid #ddd;
+  padding: 15px 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.faq-question:hover {
+background-color:  rgba(250, 179, 85, 0.8);
+}
+
+.faq-question:last-child {
+  border-bottom: none;
+}
+
+.faq-question h3 {
+  margin-left: 2vw;
+  font-size: 18px;
+  color: #555;
+  transition: color 0.3s ease;
+}
+
+.faq-answer {
+  margin-left: 2vw;
+  max-height: 0;
+  overflow: hidden;
+  color: #666;
+  font-size: 16px;
+  line-height: 1.6;
+  transition: max-height 0.3s ease, opacity 0.3s ease, color 0.3s ease;
+  opacity: 0;
+}
+
+/* Active state styles */
+.faq-question.active {
+  border-radius: 5px;
+  background:
+  linear-gradient(to bottom, rgba(250, 179, 85, 0.8) 0%, rgba(255, 255, 255, 0) 100%),
+  linear-gradient(to top, rgba(255, 155, 155, 0.5) 0%, rgba(255, 255, 255, 0) 100%);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(0.6px);
+  -webkit-backdrop-filter: blur(0.6px);
+}
+
+.faq-question.active h3 {
+  color: #333;
+}
+
+.faq-question.active .faq-answer {
+  max-height: 500px; /* Arbitrary large value to ensure it expands fully */
+  opacity: 1;
+  color: #0f0f0f; /* Font color for the answer */
+}
+

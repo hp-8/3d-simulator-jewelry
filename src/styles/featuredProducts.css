@@ -1,0 +1,25 @@
+.featured-products-container {
+  overflow-x: auto;  /* Enable horizontal scrolling */
+  white-space: nowrap; /* Keep items in a single line */
+  padding: 20px;
+}
+
+.scrolling-wrapper {
+  display: flex;
+  gap: 20px;  /* Space between cards */
+}
+
+.product-card {
+  /* Styles for the individual product cards (same as previous example) */
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); 
+  border-radius: 8px;       
+  overflow: hidden;       
+  flex: 0 0 auto; /* Prevent cards from shrinking or growing */
+  min-width: 250px; /* Minimum card width */
+  transition: transform 0.2s ease-in-out;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
