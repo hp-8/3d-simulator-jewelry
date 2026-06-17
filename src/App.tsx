@@ -1,17 +1,20 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useState } from 'react';
+import Landing from './pages/Landing';
 import Simulator3D from './pages/Simulator3D';
 import './App.css';
 
 const App: React.FC = () => {
+  const [view, setView] = useState<'landing' | 'configurator'>('landing');
+
   return (
     <div className="app">
-      <header className="app-header">
-        <h1>Ring Configurator</h1>
-        <p>Drag to rotate · pick a metal &amp; gemstone · save or share your design</p>
-      </header>
-      <Suspense fallback={<div className="app-loading">Loading 3D scene…</div>}>
-        <Simulator3D />
-      </Suspense>
+      {view === 'landing' ? (
+        <Landing onEnter={() => setView('configurator')} />
+      ) : (
+        <Suspense fallback={<div className="app-loading">Loading the configurator…</div>}>
+          <Simulator3D onBack={() => setView('landing')} />
+        </Suspense>
+      )}
     </div>
   );
 };

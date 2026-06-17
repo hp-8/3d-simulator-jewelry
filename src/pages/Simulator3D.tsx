@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as THREE from 'three';
 import { Canvas, useLoader } from '@react-three/fiber';
-import { AccumulativeShadows, Html, RandomizedLight, Environment, Center, PresentationControls } from '@react-three/drei';
+import { AccumulativeShadows, RandomizedLight, Environment, Center, PresentationControls } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import { RGBELoader } from 'three-stdlib';
 import '../styles/Simulator3D.css';
@@ -31,7 +31,14 @@ const GEMSTONES = [
   { name: 'Amethyst', hex: '#5D478B' },
 ];
 
-function Simulator3D() {
+const labelFor = (list: { name: string; hex: string }[], hex: string) =>
+  list.find((i) => i.hex === hex)?.name ?? 'Custom';
+
+interface SimulatorProps {
+  onBack?: () => void;
+}
+
+function Simulator3D({ onBack }: SimulatorProps) {
   const currentConfig = useSelector((state: RootState) => state.configurations.currentConfig);
   const savedConfigurations = useSelector((state: RootState) => state.configurations.savedConfigurations);
   const dispatch = useDispatch();
@@ -73,10 +80,10 @@ function Simulator3D() {
   };
 
   return (
-    <div className="simulator-container">
-      <Canvas className="canvas-container" shadows camera={{ position: [0, 0, 15], fov: 55, near: 1, far: 30 }}>
-        <color attach="background" args={['#000000']} />
-        <ambientLight />
+    <div className="simulator">
+      <Canvas className="sim-canvas" shadows camera={{ position: [0, 0, 15], fov: 55, near: 1, far: 30 }}>
+        <color attach="background" args={['#0b0b0f']} />
+        <ambientLight intensity={0.6} />
         <Environment map={texture} />
         <PresentationControls
           global
@@ -88,7 +95,7 @@ function Simulator3D() {
           azimuth={[-Infinity, Infinity]}>
           <group position={[0, -3, 0]}>
             <Center top>
-              <Ring className="ring-container" map={texture} ringColor={currentConfig.ringColor} diamondColor={currentConfig.diamondColor} rotation={[-Math.PI / 2.05, 0, 0]} scale={3} />
+              <Ring map={texture} ringColor={currentConfig.ringColor} diamondColor={currentConfig.diamondColor} rotation={[-Math.PI / 2.05, 0, 0]} scale={3} />
             </Center>
             <AccumulativeShadows temporal frames={100} alphaTest={0.95} opacity={1} scale={20}>
               <RandomizedLight amount={8} radius={10} ambient={0.5} position={[0, 10, -2.5]} bias={0.001} size={3} />
@@ -98,49 +105,78 @@ function Simulator3D() {
         <EffectComposer>
           <Bloom luminanceThreshold={1} intensity={0.85} levels={9} mipmapBlur />
         </EffectComposer>
+      </Canvas>
 
-        <Html position={[-2, -6, 0]} scale={0.15} className="material-container">
-          <div className="material-btn">
+      {/* top bar */}
+      <header className="sim-bar">
+        <div className="sim-bar-left">
+          {onBack && (
+            <button className="ghost-btn" onClick={onBack}>
+              <span aria-hidden="true">←</span> Back
+            </button>
+          )}
+          <span className="brand sim-brand">AURUM</span>
+        </div>
+        <div className="sim-bar-right">
+          <button className="ghost-btn" onClick={handleSave}>Save</button>
+          <button className="solid-btn" onClick={handleShare}>Share design</button>
+        </div>
+      </header>
+
+      {/* control panel */}
+      <aside className="sim-panel">
+        <fieldset className="picker">
+          <legend>Metal</legend>
+          <p className="picker-value">{labelFor(METALS, currentConfig.ringColor)}</p>
+          <div className="chips">
             {METALS.map((m) => (
               <button
                 key={m.hex}
-                className={currentConfig.ringColor === m.hex ? 'active' : ''}
-                onClick={() => dispatch(setRingColor(m.hex))}>
-                {m.name}
-              </button>
+                className={`chip ${currentConfig.ringColor === m.hex ? 'active' : ''}`}
+                style={{ '--chip': m.hex } as React.CSSProperties}
+                title={m.name}
+                aria-label={m.name}
+                aria-pressed={currentConfig.ringColor === m.hex}
+                onClick={() => dispatch(setRingColor(m.hex))}
+              />
             ))}
           </div>
-        </Html>
-        <Html position={[-10, 2, 0]} className="gemstone-container">
-          <div className="gemstone-btn">
+        </fieldset>
+
+        <fieldset className="picker">
+          <legend>Gemstone</legend>
+          <p className="picker-value">{labelFor(GEMSTONES, currentConfig.diamondColor)}</p>
+          <div className="chips">
             {GEMSTONES.map((g) => (
               <button
                 key={g.hex}
-                className={currentConfig.diamondColor === g.hex ? 'active' : ''}
-                onClick={() => dispatch(setDiamondColor(g.hex))}>
-                {g.name}
-              </button>
+                className={`chip ${currentConfig.diamondColor === g.hex ? 'active' : ''}`}
+                style={{ '--chip': g.hex } as React.CSSProperties}
+                title={g.name}
+                aria-label={g.name}
+                aria-pressed={currentConfig.diamondColor === g.hex}
+                onClick={() => dispatch(setDiamondColor(g.hex))}
+              />
             ))}
           </div>
-        </Html>
-      </Canvas>
+        </fieldset>
+      </aside>
 
-      <div className="controls">
-        <button onClick={handleSave}>Save Configuration</button>
-        <button onClick={handleShare}>Copy Share Link</button>
-      </div>
+      <p className="sim-hint">Drag the ring to rotate</p>
 
       {savedConfigurations.length > 0 && (
-        <div className="saved-configs">
+        <div className="saved-strip">
+          <span className="saved-label">Saved</span>
           {savedConfigurations.map((config, index) => (
             <div className="saved-swatch" key={`${config.ringColor}-${config.diamondColor}-${index}`}>
               <button
                 className="swatch-apply"
-                title="Apply this configuration"
+                title="Apply this design"
+                aria-label="Apply saved design"
                 style={{ background: `linear-gradient(135deg, ${config.ringColor} 50%, ${config.diamondColor} 50%)` }}
                 onClick={() => dispatch(applyConfiguration(config))}
               />
-              <button className="swatch-remove" title="Remove" onClick={() => dispatch(removeConfiguration(index))}>
+              <button className="swatch-remove" title="Remove" aria-label="Remove saved design" onClick={() => dispatch(removeConfiguration(index))}>
                 ×
               </button>
             </div>
@@ -148,7 +184,7 @@ function Simulator3D() {
         </div>
       )}
 
-      {status && <div className="status-toast">{status}</div>}
+      {status && <div className="status-toast" role="status">{status}</div>}
     </div>
   );
 }
