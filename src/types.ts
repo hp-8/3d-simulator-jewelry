@@ -23,4 +23,5 @@ export interface RingProps {
 export interface Configuration {
   ringColor: string;
   diamondColor: string;
+  ringStyle: string;
 }
