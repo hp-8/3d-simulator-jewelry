@@ -1,5 +1,5 @@
-/* Hallmark · tokens · theme: Midnight-luxury (atmospheric)
- * paper: near-black · accent: champagne-gold · display: Playfair
+/* tokens · theme: Velvet (modern fine-jeweler)
+ * paper: warm charcoal · accent: champagne-gold (hairline only) · type: Bricolage Grotesque + Hanken Grotesk
  */
 :root {
   /* paper + surfaces */
@@ -22,9 +22,9 @@
   --color-focus: oklch(83% 0.11 86);
 
   /* type */
-  --font-brand: 'Cinzel Decorative', Georgia, serif;
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-brand: 'Bricolage Grotesque', 'Hanken Grotesk', system-ui, sans-serif;
+  --font-display: 'Bricolage Grotesque', 'Hanken Grotesk', system-ui, sans-serif;
+  --font-body: 'Hanken Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   --text-xs: 0.75rem;
   --text-sm: 0.875rem;
@@ -60,4 +60,7 @@
   /* effects */
   --glow-gold: 0 0 80px -10px oklch(83% 0.11 86 / 0.45);
   --blur-panel: blur(16px);
+  /* shadows tinted toward the warm paper hue, not pure black */
+  --shadow-soft: 0 2px 8px oklch(9% 0.01 275 / 0.5), 0 16px 40px -12px oklch(6% 0.02 60 / 0.7);
+  --shadow-lift: 0 30px 80px -30px oklch(6% 0.02 60 / 0.85);
 }

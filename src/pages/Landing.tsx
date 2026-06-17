@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
+import { Suspense, lazy, useEffect, useState } from 'react';
 import '../styles/Landing.css';
+
+const LandingRing = lazy(() => import('../components/LandingRing'));
 
 interface LandingProps {
   onEnter: () => void;
@@ -14,39 +16,46 @@ export default function Landing({ onEnter }: LandingProps) {
 
   return (
     <main className={`landing ${mounted ? 'is-in' : ''}`}>
-      <div className="landing-bloom" aria-hidden="true" />
+      <div className="landing-grain" aria-hidden="true" />
+      <div className="landing-spot" aria-hidden="true" />
+
+      {/* live product render, bleeding off the right edge */}
+      <div className="landing-stage" aria-hidden="true">
+        <Suspense fallback={<div className="landing-stage-glow" />}>
+          <LandingRing />
+        </Suspense>
+      </div>
 
       <header className="landing-top">
         <span className="brand">AURUM</span>
-        <span className="brand-sub">Fine Jewelry · Made to Order</span>
+        <button className="brand-enter" onClick={onEnter}>
+          Open studio
+        </button>
       </header>
 
       <section className="landing-hero">
-        <p className="eyebrow">The Bespoke Atelier</p>
         <h1>
-          Design a ring that is
-          <em> unmistakably yours.</em>
+          Shape it.<br />
+          Set it. <span className="hero-soft">Turn it in the light.</span>
         </h1>
         <p className="lede">
-          Sculpt the metal, set the stone, and turn it in real time under studio light —
-          then save the design or share it with a single link.
+          A real-time 3D studio for one-of-a-kind rings. Choose the setting, the metal,
+          and the stone, then watch it catch the light from every angle.
         </p>
 
         <div className="landing-actions">
           <button className="cta" onClick={onEnter}>
-            Open the configurator
+            Start designing
             <span className="cta-arrow" aria-hidden="true">→</span>
           </button>
-          <ul className="landing-specs">
-            <li><strong>3</strong> metals</li>
-            <li><strong>6</strong> gemstones</li>
-            <li>real-time 3D</li>
-          </ul>
+          <p className="landing-meta">6 settings · 3 metals · 6 gemstones</p>
         </div>
       </section>
 
       <footer className="landing-foot">
-        <span>Drag to rotate · physically based refraction · WebGL</span>
+        <span>Drag to rotate</span>
+        <span>Physically based refraction</span>
+        <span>Built with WebGL</span>
       </footer>
     </main>
   );

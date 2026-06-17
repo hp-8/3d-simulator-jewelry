@@ -2,14 +2,16 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import * as THREE from 'three';
 import { Canvas, useLoader } from '@react-three/fiber';
-import { AccumulativeShadows, RandomizedLight, Environment, Center, PresentationControls } from '@react-three/drei';
+import { AccumulativeShadows, RandomizedLight, Environment, PresentationControls } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import { RGBELoader } from 'three-stdlib';
 import '../styles/Simulator3D.css';
-import Ring from '../components/ring';
+import RingModel from '../components/ringModel';
+import { RING_STYLES, styleName } from '../ringStyles';
 import {
   setRingColor,
   setDiamondColor,
+  setRingStyle,
   saveConfiguration,
   applyConfiguration,
   removeConfiguration,
@@ -68,6 +70,7 @@ function Simulator3D({ onBack }: SimulatorProps) {
     const params = new URLSearchParams({
       metal: currentConfig.ringColor.replace('#', ''),
       stone: currentConfig.diamondColor.replace('#', ''),
+      style: currentConfig.ringStyle,
     });
     const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
     try {
@@ -94,9 +97,12 @@ function Simulator3D({ onBack }: SimulatorProps) {
           polar={[-Infinity, Infinity]}
           azimuth={[-Infinity, Infinity]}>
           <group position={[0, -3, 0]}>
-            <Center top>
-              <Ring map={texture} ringColor={currentConfig.ringColor} diamondColor={currentConfig.diamondColor} rotation={[-Math.PI / 2.05, 0, 0]} scale={3} />
-            </Center>
+            <RingModel
+              style={currentConfig.ringStyle}
+              map={texture}
+              ringColor={currentConfig.ringColor}
+              diamondColor={currentConfig.diamondColor}
+            />
             <AccumulativeShadows temporal frames={100} alphaTest={0.95} opacity={1} scale={20}>
               <RandomizedLight amount={8} radius={10} ambient={0.5} position={[0, 10, -2.5]} bias={0.001} size={3} />
             </AccumulativeShadows>
@@ -125,6 +131,23 @@ function Simulator3D({ onBack }: SimulatorProps) {
 
       {/* control panel */}
       <aside className="sim-panel">
+        <fieldset className="picker">
+          <legend>Setting</legend>
+          <p className="picker-value">{styleName(currentConfig.ringStyle)}</p>
+          <div className="style-options">
+            {RING_STYLES.map((s) => (
+              <button
+                key={s.id}
+                type="button"
+                className={`style-btn ${currentConfig.ringStyle === s.id ? 'active' : ''}`}
+                aria-pressed={currentConfig.ringStyle === s.id}
+                onClick={() => dispatch(setRingStyle(s.id))}>
+                {s.name}
+              </button>
+            ))}
+          </div>
+        </fieldset>
+
         <fieldset className="picker">
           <legend>Metal</legend>
           <p className="picker-value">{labelFor(METALS, currentConfig.ringColor)}</p>

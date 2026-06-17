@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { Configuration } from '../../types';
+import { DEFAULT_RING_STYLE, isRingStyle } from '../../ringStyles';
 
 interface ConfigurationState {
   currentConfig: Configuration;
@@ -9,7 +10,15 @@ interface ConfigurationState {
 const DEFAULT_CONFIG: Configuration = {
   ringColor: '#FFD700',
   diamondColor: '#B1A296',
+  ringStyle: DEFAULT_RING_STYLE,
 };
+
+// Old saved configs predate ringStyle — backfill so they stay valid.
+const withStyle = (c: Partial<Configuration>): Configuration => ({
+  ringColor: c.ringColor ?? DEFAULT_CONFIG.ringColor,
+  diamondColor: c.diamondColor ?? DEFAULT_CONFIG.diamondColor,
+  ringStyle: isRingStyle(c.ringStyle ?? null) ? (c.ringStyle as string) : DEFAULT_RING_STYLE,
+});
 
 const SAVED_KEY = 'jewelry:savedConfigurations';
 
@@ -24,8 +33,13 @@ const configFromUrl = (): Configuration | null => {
   const params = new URLSearchParams(window.location.search);
   const metal = params.get('metal');
   const stone = params.get('stone');
+  const style = params.get('style');
   if (isHexColor(metal) && isHexColor(stone)) {
-    return { ringColor: normalizeHex(metal), diamondColor: normalizeHex(stone) };
+    return {
+      ringColor: normalizeHex(metal),
+      diamondColor: normalizeHex(stone),
+      ringStyle: isRingStyle(style) ? style : DEFAULT_RING_STYLE,
+    };
   }
   return null;
 };
@@ -34,7 +48,7 @@ const loadSaved = (): Configuration[] => {
   if (typeof window === 'undefined') return [];
   try {
     const raw = window.localStorage.getItem(SAVED_KEY);
-    return raw ? (JSON.parse(raw) as Configuration[]) : [];
+    return raw ? (JSON.parse(raw) as Partial<Configuration>[]).map(withStyle) : [];
   } catch {
     return [];
   }
@@ -64,6 +78,9 @@ const configurationSlice = createSlice({
     setDiamondColor(state, action: PayloadAction<string>) {
       state.currentConfig.diamondColor = action.payload;
     },
+    setRingStyle(state, action: PayloadAction<string>) {
+      state.currentConfig.ringStyle = action.payload;
+    },
     applyConfiguration(state, action: PayloadAction<Configuration>) {
       state.currentConfig = { ...action.payload };
     },
@@ -71,7 +88,8 @@ const configurationSlice = createSlice({
       const exists = state.savedConfigurations.some(
         (c) =>
           c.ringColor === state.currentConfig.ringColor &&
-          c.diamondColor === state.currentConfig.diamondColor
+          c.diamondColor === state.currentConfig.diamondColor &&
+          c.ringStyle === state.currentConfig.ringStyle
       );
       if (!exists) {
         state.savedConfigurations.push({ ...state.currentConfig });
@@ -88,6 +106,7 @@ const configurationSlice = createSlice({
 export const {
   setRingColor,
   setDiamondColor,
+  setRingStyle,
   applyConfiguration,
   saveConfiguration,
   removeConfiguration,
