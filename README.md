@@ -5,10 +5,9 @@ photoreal diamond ring in real time, swap metals and gemstones, and watch physic
 based refraction and lighting update instantly — then save your favorites or copy a
 shareable link to the exact design.
 
-> **Live demo:** _add Vercel/Netlify URL here after deploy_
-> **Demo:** _add `docs/demo.gif` after recording_
+> **Live demo:** **[3d-simulator-jewelry.vercel.app](https://3d-simulator-jewelry.vercel.app)**
 
-<!-- ![Ring configurator demo](docs/demo.gif) -->
+![Ring configurator demo](docs/demo.gif)
 
 ---
 
