@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useGLTF, MeshRefractionMaterial, OrbitControls } from '@react-three/drei';
+import { useGLTF, MeshRefractionMaterial } from '@react-three/drei';
 import '../styles/Simulator3D.css';
 import { RingProps, GLTFResult } from '../types';
 
@@ -19,7 +19,9 @@ export default function Ring({ map, ringColor, diamondColor, ...props }: RingPro
       </mesh>
 
       <mesh castShadow receiveShadow geometry={nodes.ring.geometry} material={materials.ring} material-color={ringColor} material-envMapIntensity={4} />
-      
+
     </group>
   );
 }
+
+useGLTF.preload('/ring-transformed.glb');
